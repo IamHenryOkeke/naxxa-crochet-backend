@@ -5,7 +5,7 @@ const indexRouter = Router();
 indexRouter.get("/", (req: Request, res: Response) => {
   res.json({
     statusCode: 200,
-    message: "Welcome to your API",
+    message: "Welcome to Naxxa Crochet Store API",
   });
 });
 

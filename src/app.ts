@@ -10,6 +10,7 @@ import corsOptions from "./config/cors";
 import { CustomError } from "./lib/type";
 
 import indexRouter from "./routes/index.routes";
+import authRouter from "./routes/auth.routes";
 
 const app = express();
 app.use(cors(corsOptions));
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(passport.initialize());
 
+app.use("/api/auth", authRouter);
 app.use("/api", indexRouter);
 
 // 404 handler
@@ -40,8 +42,4 @@ app.use(
   },
 );
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+export default app;

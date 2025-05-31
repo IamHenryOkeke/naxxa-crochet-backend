@@ -18,12 +18,30 @@ model User {
   id                 String               @id @default(uuid())
   email              String               @unique
   username           String?              @unique
-  password           String? // hashed password for traditional login
+  password           String?
   googleId           String?              @unique
   name               String?
-  bio                String?
   avatar             String?
+  isVerified         Boolean              @default(false)
+  role               Role                 @default(USER)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   deletedAt          DateTime?
+  PasswordResetToken PasswordResetToken[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  tokenHash String // hashed version of the token
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([tokenHash])
 }

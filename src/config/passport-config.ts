@@ -11,7 +11,7 @@ import {
   getUserByEmail,
   getUserByGoogleId,
   updateUser,
-} from "../db/queries";
+} from "../db/user.queries";
 interface JwtPayload {
   id: string;
 }

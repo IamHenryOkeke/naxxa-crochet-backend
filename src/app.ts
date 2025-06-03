@@ -11,6 +11,7 @@ import { CustomError } from "./lib/type";
 
 import indexRouter from "./routes/index.routes";
 import authRouter from "./routes/auth.routes";
+import userRouter from "./routes/user.routes";
 
 const app = express();
 app.use(cors(corsOptions));
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(passport.initialize());
 
+app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", indexRouter);
 

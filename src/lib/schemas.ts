@@ -42,3 +42,15 @@ export const verifyAccountQuerySchema = z.object({
 export const resetPassswordSchema = createUserSchema
   .omit({ username: true, email: true })
   .merge(verifyAccountQuerySchema);
+
+export const updateUserProfileSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .optional(),
+  username: z
+    .string()
+    .min(3, { message: "Username must be at least 3 characters long" })
+    .optional(),
+  avatar: z.string().url({ message: "Avatar must be a valid url" }).optional(),
+});

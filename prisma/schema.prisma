@@ -15,19 +15,19 @@ datasource db {
 }
 
 model User {
-  id                 String               @id @default(uuid())
-  email              String               @unique
-  username           String?              @unique
-  password           String?
-  googleId           String?              @unique
-  name               String?
-  avatar             String?
-  isVerified         Boolean              @default(false)
-  role               Role                 @default(USER)
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  deletedAt          DateTime?
-  PasswordResetToken PasswordResetToken[]
+  id         String    @id @default(uuid())
+  email      String    @unique
+  username   String?   @unique
+  password   String?
+  googleId   String?   @unique
+  name       String?
+  avatar     String?
+  isVerified Boolean   @default(false)
+  role       Role      @default(USER)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+  token      Token[]
 }
 
 enum Role {
@@ -35,7 +35,7 @@ enum Role {
   ADMIN
 }
 
-model PasswordResetToken {
+model Token {
   id        String   @id @default(uuid())
   tokenHash String // hashed version of the token
   userId    String

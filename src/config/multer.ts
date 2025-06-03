@@ -14,7 +14,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (_req, _file) => ({
-    folder: "cloudinary-folder",
+    folder: "naxxa-store",
     allowed_formats: ["jpg", "png", "jpeg"],
   }),
 });
@@ -30,6 +30,13 @@ const fileFilter = (
     return cb(
       new AppError("Invalid input", 400, {
         avatar: `${file.mimetype} not allowed`,
+      }),
+    );
+  }
+  if (file.size > 2 * 1024 * 1024) {
+    return cb(
+      new AppError("File too large", 400, {
+        avatar: "File size should be less than 2MB",
       }),
     );
   }

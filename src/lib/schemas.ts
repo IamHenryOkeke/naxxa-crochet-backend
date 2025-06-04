@@ -54,3 +54,35 @@ export const updateUserProfileSchema = z.object({
     .optional(),
   avatar: z.string().url({ message: "Avatar must be a valid url" }).optional(),
 });
+
+export const createCategorySchema = z.object({
+  name: z
+    .string({ message: "Name is required" })
+    .min(3, { message: "Name must be at least 3 characters long" }),
+  description: z
+    .string({ message: "Description is required" })
+    .min(3, { message: "Description must be at least 3 characters long" }),
+  image: z
+    .string({ message: "Image url is required" })
+    .url({ message: "Image must be a valid URL" }),
+});
+
+export const updateCategorySchema = createCategorySchema.partial().merge(
+  z.object({
+    isActive: z.boolean().optional(),
+  }),
+);
+
+export const categoryParamSchema = z.object({
+  categoryId: z.string().cuid(),
+});
+
+export const querySchema = z.object({
+  page: z.string().optional(),
+  searchTerm: z
+    .string()
+    .min(1, { message: "Search term must be at least 1 characters long" })
+    .default("")
+    .optional(),
+  limit: z.string().optional(),
+});

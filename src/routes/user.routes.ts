@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { isAuthenticated } from "../middlewares/authMiddlewares";
+import { isAuthenticated } from "../middlewares/auth.middleware";
 import { validate } from "../middlewares/validation";
 import { upload } from "../config/multer";
-import { addFilePathToBody } from "../middlewares/addFilePathToBody";
+import { addFilePathToBody } from "../middlewares/addFilePathToBody.middleware";
 import { updateUserProfileSchema } from "../lib/schemas";
 import {
   deleteCurrentUser,

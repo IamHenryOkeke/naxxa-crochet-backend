@@ -32,6 +32,8 @@ passport.use(
         id: user?.id,
         username: user?.username,
         email: user?.email,
+        role: user?.role,
+        avatar: user?.avatar,
         createdAt: user?.createdAt,
       };
 

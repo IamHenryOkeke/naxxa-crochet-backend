@@ -1,13 +1,8 @@
-import {
-  deleteUser,
-  getUserById,
-  getUserByUsername,
-  updateUser,
-} from "../db/user.queries";
+import * as userQueries from "../db/user.queries";
 import { AppError } from "../error/errorHandler";
 
 export const getCurrentUser = async (id: string) => {
-  const currentUser = await getUserById(id);
+  const currentUser = await userQueries.getUserById(id);
 
   if (!currentUser || currentUser.deletedAt) {
     throw new AppError("User doesn't exist", 404);
@@ -21,7 +16,7 @@ export const updateCurrentUser = async (
   body: { name: string; username: string; bio: string; avatar: string },
 ) => {
   const { name, username, avatar } = body;
-  const currentUser = await getUserById(id);
+  const currentUser = await userQueries.getUserById(id);
 
   if (!currentUser || currentUser.deletedAt) {
     throw new AppError("User doesn't exist", 404);
@@ -30,7 +25,8 @@ export const updateCurrentUser = async (
   const normalizedUsername = username?.trim().toLowerCase();
 
   if (normalizedUsername && normalizedUsername !== currentUser.username) {
-    const existingUser = await getUserByUsername(normalizedUsername);
+    const existingUser =
+      await userQueries.getUserByUsername(normalizedUsername);
     if (existingUser) {
       throw new AppError("Username is already taken", 400);
     }
@@ -46,19 +42,19 @@ export const updateCurrentUser = async (
     throw new AppError("No fields provided for update", 400);
   }
 
-  const updatedUser = await updateUser(id, values);
+  const updatedUser = await userQueries.updateUser(id, values);
 
   return updatedUser;
 };
 
 export const deleteCurrentUser = async (id: string) => {
-  const currentUser = await getUserById(id);
+  const currentUser = await userQueries.getUserById(id);
 
   if (!currentUser || currentUser.deletedAt) {
     throw new AppError("User doesn't exist", 404);
   }
 
-  const deletedUser = await deleteUser(id);
+  const deletedUser = await userQueries.deleteUser(id);
 
   return deletedUser;
 };

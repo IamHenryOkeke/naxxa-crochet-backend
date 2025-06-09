@@ -1,15 +1,5 @@
-import {
-  createPasswordResetToken,
-  deletePasswordResetToken,
-  getPasswordResetTokenByHashedToken,
-} from "../db/passwordtoken.queries";
-import {
-  createUser,
-  getUserByEmail,
-  getUserById,
-  getUserByUsername,
-  updateUser,
-} from "../db/user.queries";
+import * as passwordtokenQueries from "../db/passwordtoken.queries";
+import * as userQueries from "../db/user.queries";
 import { AppError } from "../error/errorHandler";
 import { sendMail } from "../lib/nodemailer";
 import { createResetToken, hashResetToken } from "../utils/crypto";
@@ -24,8 +14,9 @@ export const signUp = async (
   const normalizedEmail = email.toLowerCase();
   const normalizedUsername = username.toLowerCase();
 
-  const existingUserByEmail = await getUserByEmail(normalizedEmail);
-  const existingUserByUsername = await getUserByUsername(normalizedUsername);
+  const existingUserByEmail = await userQueries.getUserByEmail(normalizedEmail);
+  const existingUserByUsername =
+    await userQueries.getUserByUsername(normalizedUsername);
 
   if (existingUserByEmail) {
     throw new AppError("Email already used. Please use another email.", 409);
@@ -46,7 +37,7 @@ export const signUp = async (
     password: hashedPassword,
   };
 
-  const newUser = await createUser(values);
+  const newUser = await userQueries.createUser(values);
 
   const token = signJWT(
     {
@@ -76,7 +67,7 @@ export const signUp = async (
 };
 
 export const logIn = async (email: string, password: string) => {
-  const isExistingUser = await getUserByEmail(email.toLowerCase());
+  const isExistingUser = await userQueries.getUserByEmail(email.toLowerCase());
 
   if (!isExistingUser || isExistingUser.deletedAt) {
     throw new AppError("invalid credentials", 401);
@@ -119,7 +110,7 @@ export const logIn = async (email: string, password: string) => {
 export const sendVerificationEmail = async (email: string) => {
   const normalizedEmail = email.toLowerCase();
 
-  const existingUser = await getUserByEmail(normalizedEmail);
+  const existingUser = await userQueries.getUserByEmail(normalizedEmail);
 
   if (!existingUser || existingUser.deletedAt) {
     throw new AppError("Invalid credentials.", 401);
@@ -166,7 +157,7 @@ export const verifyEmail = async (token: string) => {
 
   const decoded = verifyJWT(token) as unknown as { id: string };
 
-  const user = await getUserById(decoded.id);
+  const user = await userQueries.getUserById(decoded.id);
 
   if (!user || user.deletedAt) {
     throw new AppError("User not found", 404);
@@ -178,7 +169,7 @@ export const verifyEmail = async (token: string) => {
 
   const values = { isVerified: true };
 
-  await updateUser(user.id, values);
+  await userQueries.updateUser(user.id, values);
 
   return { message: "Email verification successful." };
 };
@@ -186,13 +177,13 @@ export const verifyEmail = async (token: string) => {
 export const sendResetPasswordEmail = async (email: string) => {
   const normalizedEmail = email.toLowerCase();
 
-  const existingUserByEmail = await getUserByEmail(normalizedEmail);
+  const existingUserByEmail = await userQueries.getUserByEmail(normalizedEmail);
 
   if (!existingUserByEmail || existingUserByEmail.deletedAt) {
     throw new AppError("Invalid credentials.", 409);
   }
 
-  await deletePasswordResetToken(existingUserByEmail.id);
+  await passwordtokenQueries.deletePasswordResetToken(existingUserByEmail.id);
 
   const { token, hashedToken: tokenHash } = createResetToken();
 
@@ -205,7 +196,7 @@ export const sendResetPasswordEmail = async (email: string) => {
       },
     },
   };
-  await createPasswordResetToken(values);
+  await passwordtokenQueries.createPasswordResetToken(values);
 
   const verificationLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
 
@@ -230,7 +221,8 @@ export const sendResetPasswordEmail = async (email: string) => {
 export const resetPassword = async (token: string, password: string) => {
   const hashedToken = hashResetToken(token);
 
-  const existingToken = await getPasswordResetTokenByHashedToken(hashedToken);
+  const existingToken =
+    await passwordtokenQueries.getPasswordResetTokenByHashedToken(hashedToken);
 
   if (!existingToken) {
     throw new AppError("Reset token is invalid or has expired.", 400);
@@ -238,9 +230,11 @@ export const resetPassword = async (token: string, password: string) => {
 
   const hashedPassword = await hashPassword(password);
 
-  await updateUser(existingToken.userId, { password: hashedPassword });
+  await userQueries.updateUser(existingToken.userId, {
+    password: hashedPassword,
+  });
 
-  await deletePasswordResetToken(existingToken.userId);
+  await passwordtokenQueries.deletePasswordResetToken(existingToken.userId);
 
   return { message: "Password reset successful." };
 };

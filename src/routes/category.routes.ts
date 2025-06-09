@@ -1,12 +1,6 @@
 import { Router } from "express";
 import { isAdmin, isAuthenticated } from "../middlewares/auth.middleware";
-import {
-  getAllCategories,
-  getCategoryById,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-} from "../controllers/category.controllers";
+import * as categoryControllers from "../controllers/category.controllers";
 import { optionalAuth } from "../middlewares/optionalAuth.middleware";
 import { validate } from "../middlewares/validation";
 import {
@@ -24,14 +18,14 @@ categoryRouter.get(
   "/all",
   optionalAuth,
   validate({ query: querySchema }),
-  getAllCategories,
+  categoryControllers.getAllCategories,
 );
 
 categoryRouter.get(
   "/:categoryId",
   optionalAuth,
   validate({ params: categoryParamSchema }),
-  getCategoryById,
+  categoryControllers.getCategoryById,
 );
 
 // Apply authentication middleware to all other routes
@@ -42,7 +36,7 @@ categoryRouter.post(
   upload.single("image"),
   addFilePathToBody("image"),
   validate({ body: createCategorySchema }),
-  createCategory,
+  categoryControllers.createCategory,
 );
 
 categoryRouter.put(
@@ -50,13 +44,13 @@ categoryRouter.put(
   upload.single("image"),
   addFilePathToBody("image"),
   validate({ params: categoryParamSchema, body: updateCategorySchema }),
-  updateCategory,
+  categoryControllers.updateCategory,
 );
 
 categoryRouter.delete(
   "/:categoryId",
   validate({ params: categoryParamSchema }),
-  deleteCategory,
+  categoryControllers.deleteCategory,
 );
 
 export default categoryRouter;

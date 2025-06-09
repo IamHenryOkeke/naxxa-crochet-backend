@@ -10,39 +10,40 @@ import passport from "passport";
 import { signJWT } from "../utils/jwt";
 import { validate } from "../middlewares/validation";
 import { User } from "../generated/prisma";
-import {
-  authSignUp,
-  authLogin,
-  authSendVerificationEmail,
-  authVerifyEmail,
-  authSendResetPasswordEmail,
-  authResetPassword,
-} from "../controllers/auth.controllers";
+import * as authControllers from "../controllers/auth.controllers";
 
 const authRouter = Router();
 
-authRouter.post("/sign-up", validate({ body: createUserSchema }), authSignUp);
+authRouter.post(
+  "/sign-up",
+  validate({ body: createUserSchema }),
+  authControllers.authSignUp,
+);
 authRouter.get(
   "/verify-account",
   validate({ query: verifyAccountQuerySchema }),
-  authVerifyEmail,
+  authControllers.authVerifyEmail,
 );
 authRouter.post(
   "/request-verification-link",
   validate({ body: sendVerificationLinkSchema }),
-  authSendVerificationEmail,
+  authControllers.authSendVerificationEmail,
 );
 
-authRouter.post("/login", validate({ body: loginUserSchema }), authLogin);
+authRouter.post(
+  "/login",
+  validate({ body: loginUserSchema }),
+  authControllers.authLogin,
+);
 authRouter.post(
   "/request-password-reset",
   validate({ body: sendVerificationLinkSchema }),
-  authSendResetPasswordEmail,
+  authControllers.authSendResetPasswordEmail,
 );
 authRouter.post(
   "/reset-password",
   validate({ body: resetPassswordSchema }),
-  authResetPassword,
+  authControllers.authResetPassword,
 );
 
 authRouter.get(

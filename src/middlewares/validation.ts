@@ -29,6 +29,7 @@ export const validate =
           400,
           result.error.flatten().fieldErrors,
         );
+      req.validatedQuery = result.data;
     }
 
     if (schemas.params) {

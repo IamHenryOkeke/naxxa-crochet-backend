@@ -10,6 +10,9 @@
     "start": "node dist/server.js",
     "prepare": "husky"
   },
+   "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "lint-staged": {
     "**/*.ts": [
       "eslint --fix",

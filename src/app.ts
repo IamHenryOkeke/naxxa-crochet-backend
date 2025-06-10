@@ -13,6 +13,7 @@ import indexRouter from "./routes/index.routes";
 import authRouter from "./routes/auth.routes";
 import userRouter from "./routes/user.routes";
 import categoryRouter from "./routes/category.routes";
+import productRouter from "./routes/product.routes";
 
 const app = express();
 app.use(cors(corsOptions));
@@ -24,6 +25,7 @@ app.use(passport.initialize());
 
 app.use("/api/auth", authRouter);
 app.use("/api/category", categoryRouter);
+app.use("/api/product", productRouter);
 app.use("/api/user", userRouter);
 app.use("/api", indexRouter);
 

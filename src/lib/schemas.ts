@@ -213,3 +213,24 @@ export const addProductSchema = z.object({
 });
 
 export const updateProductSchema = addProductSchema.partial();
+
+export const createReviewSchema = z.object({
+  rating: z
+    .number()
+    .int()
+    .min(1, "Rating must be at least 1")
+    .max(5, "Rating must not exceed 5"),
+  comment: z.string().min(3, "Comment must be at least 3 characters"),
+  productId: z.string().cuid(),
+});
+
+export const updateReviewSchema = createReviewSchema
+  .pick({
+    rating: true,
+    comment: true,
+  })
+  .partial();
+
+export const reviewParamSchema = z.object({
+  reviewId: z.string().cuid(),
+});

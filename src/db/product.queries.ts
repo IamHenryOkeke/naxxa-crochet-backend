@@ -43,7 +43,7 @@ export async function getProducts({
     return {
       products,
       total,
-      totaPage: take ? Math.ceil(total / take) : 1,
+      totalPage: take ? Math.ceil(total / take) : 1,
       page: skip && take ? Math.ceil(skip / take) + 1 : 1,
     };
   } catch (error) {

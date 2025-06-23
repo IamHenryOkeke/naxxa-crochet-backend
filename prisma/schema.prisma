@@ -28,6 +28,7 @@ model User {
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime?
   token      Token[]
+  Review     Review[]
 }
 
 enum Role {
@@ -73,6 +74,7 @@ model Product {
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   sizes       ProductSize[]
+  Review      Review[]
 }
 
 enum Size {
@@ -99,4 +101,20 @@ model ProductSize {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([productId, size])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([productId])
+  @@index([userId])
 }

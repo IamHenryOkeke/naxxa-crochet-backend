@@ -9,32 +9,26 @@ import corsOptions from "./config/cors";
 
 import { CustomError } from "./lib/type";
 
-import indexRouter from "./routes/index.routes";
-import authRouter from "./routes/auth.routes";
-import userRouter from "./routes/user.routes";
-import categoryRouter from "./routes/category.routes";
-import productRouter from "./routes/product.routes";
-import reviewRouter from "./routes/review.routes";
-import orderRouter from "./routes/order.routes";
-import webhookRouter from "./routes/webhook.routes";
+import * as routes from "./routes";
 
 const app = express();
 app.use(cors(corsOptions));
 
-app.use("/api/webhook", webhookRouter);
+app.use("/api/webhook", routes.webhookRouter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(passport.initialize());
 
-app.use("/api/auth", authRouter);
-app.use("/api/categories", categoryRouter);
-app.use("/api/orders", orderRouter);
-app.use("/api/products", productRouter);
-app.use("/api/reviews", reviewRouter);
-app.use("/api/user", userRouter);
-app.use("/api", indexRouter);
+app.use("/api/auth", routes.authRouter);
+app.use("/api/cart", routes.cartRouter);
+app.use("/api/categories", routes.categoryRouter);
+app.use("/api/orders", routes.orderRouter);
+app.use("/api/products", routes.productRouter);
+app.use("/api/reviews", routes.reviewRouter);
+app.use("/api/user", routes.userRouter);
+app.use("/api", routes.indexRouter);
 
 // 404 handler
 app.use((req, res) => {

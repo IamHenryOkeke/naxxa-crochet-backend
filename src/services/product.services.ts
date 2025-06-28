@@ -68,12 +68,20 @@ export const getAllProducts = async ({
   const orderBy: Prisma.ProductOrderByWithRelationInput =
     sortBy && sortOrder ? { [sortBy]: sortOrder } : { createdAt: "desc" };
 
-  return await productQueries.getProducts({
+  const result = await productQueries.getProducts({
     where,
     take,
     skip,
     orderBy,
   });
+
+  return {
+    data: result.products,
+    page: result.page,
+    limit,
+    total: result.total,
+    totalPages: result.totalPage,
+  };
 };
 
 export const getProductById = async (

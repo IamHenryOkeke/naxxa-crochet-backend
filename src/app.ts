@@ -15,9 +15,13 @@ import userRouter from "./routes/user.routes";
 import categoryRouter from "./routes/category.routes";
 import productRouter from "./routes/product.routes";
 import reviewRouter from "./routes/review.routes";
+import orderRouter from "./routes/order.routes";
+import webhookRouter from "./routes/webhook.routes";
 
 const app = express();
 app.use(cors(corsOptions));
+
+app.use("/api/webhook", webhookRouter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,6 +30,7 @@ app.use(passport.initialize());
 
 app.use("/api/auth", authRouter);
 app.use("/api/categories", categoryRouter);
+app.use("/api/orders", orderRouter);
 app.use("/api/products", productRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/user", userRouter);

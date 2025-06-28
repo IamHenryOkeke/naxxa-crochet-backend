@@ -76,7 +76,7 @@ export const createProduct = asyncHandler(
 
     res.status(201).json({
       message: "Product created successfully",
-      category: newProduct,
+      product: newProduct,
     });
   },
 );

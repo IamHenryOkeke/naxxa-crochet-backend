@@ -29,6 +29,7 @@ model User {
   deletedAt  DateTime?
   token      Token[]
   Review     Review[]
+  Order      Order[]
 }
 
 enum Role {
@@ -75,6 +76,7 @@ model Product {
   updatedAt   DateTime       @updatedAt
   sizes       ProductSize[]
   Review      Review[]
+  OrderItem   OrderItem[]
 }
 
 enum Size {
@@ -117,4 +119,51 @@ model Review {
   @@unique([userId, productId])
   @@index([productId])
   @@index([userId])
+}
+
+model Order {
+  id                String        @id @default(cuid())
+  paymentId         String        @unique
+  paymentStatus     PAYMENTSTATUS @default(Unpaid)
+  total             Float
+  deliveryStatus    ORDERSTATUS   @default(Pending)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  deletedAt         DateTime?
+  orderItems        OrderItem[]
+  userFirstName     String
+  userLastName      String
+  userEmail         String
+  userAddress       String
+  userCity          String
+  userState         String
+  userPhone         String
+  userWhatsappPhone String
+  notes             String?
+  userId            String?
+  user              User?         @relation(fields: [userId], references: [id])
+}
+
+enum ORDERSTATUS {
+  Cancelled
+  Pending
+  Shipped
+  Delivered
+}
+
+enum PAYMENTSTATUS {
+  Unpaid
+  Pending
+  Paid
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+  price     Float
+  size      Size?
 }

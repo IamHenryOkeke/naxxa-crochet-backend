@@ -234,3 +234,77 @@ export const updateReviewSchema = createReviewSchema
 export const reviewParamSchema = z.object({
   reviewId: z.string().cuid(),
 });
+
+export const createOrderSchema = z.object({
+  orderItems: z
+    .array(
+      z.object({
+        productId: z.string().min(1, "Product ID is required"),
+        quantity: z.number().int().positive(),
+        price: z.number().nonnegative(),
+        size: z.enum(["XS", "S", "M", "L", "XL", "XXL"]).optional(), // Match your `Size` enum if defined
+      }),
+    )
+    .min(1, "At least one order item is required"),
+
+  userFirstName: z.string().min(1, "First name is required"),
+  userLastName: z.string().min(1, "Last name is required"),
+  userEmail: z.string().email("Invalid email address"),
+  userAddress: z.string().min(1, "Address is required"),
+  userCity: z.string().min(1, "City is required"),
+  userState: z.string().min(1, "State is required"),
+  userPhone: z.string().min(8, "Phone number is required"),
+  userWhatsappPhone: z.string().min(8, "WhatsApp number is required"),
+
+  notes: z.string().optional(),
+
+  total: z.number().nonnegative(),
+});
+
+export const updateOrderStatusSchema = z.object({
+  deliveryStatus: z
+    .enum(["Pending", "Shipped", "Delivered", "Cancelled"])
+    .optional(),
+  paymentStatus: z.enum(["Unpaid", "Pending", "Paid"]).optional(),
+});
+
+export const payOrderSchema = z.object({
+  paymentStatus: z.enum(["Paid"]).default("Paid"),
+});
+
+export const orderIdParamSchema = z.object({
+  orderId: z.string().cuid(),
+});
+
+export const ORDERSTATUS = z.enum([
+  "Cancelled",
+  "Pending",
+  "Shipped",
+  "Delivered",
+]);
+export const PAYMENTSTATUS = z.enum(["Unpaid", "Pending", "Paid"]);
+
+export const getAllOrdersQuerySchema = z.object({
+  page: z
+    .string()
+    .optional()
+    .default("1")
+    .transform((val) => parseInt(val))
+    .refine((val) => !isNaN(val) && val > 0, {
+      message: "Page must be a positive number",
+    }),
+
+  limit: z
+    .string()
+    .optional()
+    .default("15")
+    .transform((val) => parseInt(val))
+    .refine((val) => !isNaN(val) && val > 0, {
+      message: "Limit must be a positive number",
+    }),
+
+  deliveryStatus: ORDERSTATUS.optional(),
+  paymentStatus: PAYMENTSTATUS.optional(),
+
+  search: z.string().optional(),
+});

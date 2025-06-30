@@ -30,6 +30,7 @@ model User {
   token      Token[]
   Review     Review[]
   Order      Order[]
+  Cart       Cart?
 }
 
 enum Role {
@@ -77,6 +78,7 @@ model Product {
   sizes       ProductSize[]
   Review      Review[]
   OrderItem   OrderItem[]
+  CartItem    CartItem[]
 }
 
 enum Size {
@@ -166,4 +168,27 @@ model OrderItem {
   quantity  Int
   price     Float
   size      Size?
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+  size      Size
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId, size])
 }

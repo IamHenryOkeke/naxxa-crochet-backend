@@ -308,3 +308,17 @@ export const getAllOrdersQuerySchema = z.object({
 
   search: z.string().optional(),
 });
+
+export const cartParamSchema = z.object({
+  cartItemId: z.string().cuid(),
+});
+
+export const addCartItemSchema = z.object({
+  productId: z.string(),
+  quantity: z.number().min(1, "Quantity must be at least 1"),
+  size: z.enum(["XS", "S", "M", "L", "XL", "XXL"]),
+});
+
+export const updateCartItemSchema = z.object({
+  quantity: z.number().min(1).optional(),
+});

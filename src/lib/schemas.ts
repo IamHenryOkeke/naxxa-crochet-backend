@@ -90,14 +90,11 @@ export const productParamSchema = z.object({
   productId: z.string().cuid(),
 });
 
-export const querySchema = z.object({
-  page: z.string().optional(),
+export const categoryQuerySchema = z.object({
   searchTerm: z
     .string()
     .min(1, { message: "Search term must be at least 1 characters long" })
-    .default("")
     .optional(),
-  limit: z.string().optional(),
 });
 
 export const productQuerySchema = z.object({

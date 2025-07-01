@@ -4,9 +4,9 @@ import * as authService from "../services/auth.services";
 
 export const authSignUp = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    const { username, email, password } = req.body;
+    const { username, email, password, name } = req.body;
 
-    const user = await authService.signUp(username, email, password);
+    const user = await authService.signUp({ username, email, password, name });
 
     res.status(201).json({
       message:

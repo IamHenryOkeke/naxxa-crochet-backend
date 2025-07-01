@@ -53,14 +53,14 @@ export const getAllOrders = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     const user = req.user as Express.User;
 
-    const { page, limit, search, deliveryStatus, paymentStatus } =
+    const { page, limit, searchTerm, deliveryStatus, paymentStatus } =
       req.query as unknown as z.infer<typeof schemas.getAllOrdersQuerySchema>;
 
     const result = await orderService.getAllOrders({
       user,
       page,
       limit,
-      search,
+      searchTerm,
       deliveryStatus,
       paymentStatus,
     });

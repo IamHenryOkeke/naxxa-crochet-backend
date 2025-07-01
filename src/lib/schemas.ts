@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 export const createUserSchema = z.object({
+  name: z
+    .string({ message: "Username is required" })
+    .min(3, { message: "Username must be at least 3 characters long" }),
   username: z
     .string({ message: "Username is required" })
     .min(3, { message: "Username must be at least 3 characters long" }),
@@ -303,7 +306,7 @@ export const getAllOrdersQuerySchema = z.object({
   deliveryStatus: ORDERSTATUS.optional(),
   paymentStatus: PAYMENTSTATUS.optional(),
 
-  search: z.string().optional(),
+  searchTerm: z.string().optional(),
 });
 
 export const cartParamSchema = z.object({

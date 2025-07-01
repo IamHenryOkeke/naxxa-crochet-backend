@@ -12,7 +12,6 @@ reviewRouter.get(
   reviewControllers.getAllReviews,
 );
 
-// Public: Get a single review
 reviewRouter.get(
   "/:reviewId",
   validate({ params: schemas.reviewParamSchema }),
@@ -27,7 +26,6 @@ reviewRouter.post(
   reviewControllers.createReview,
 );
 
-// Protected: Update a review
 reviewRouter.put(
   "/:reviewId",
   validate({
@@ -37,7 +35,6 @@ reviewRouter.put(
   reviewControllers.updateReview,
 );
 
-// Protected: Delete a review
 reviewRouter.delete(
   "/:reviewId",
   validate({ params: schemas.reviewParamSchema }),

@@ -147,7 +147,7 @@ type GetAllOrdersOptions = {
   user: Express.User;
   page: number;
   limit: number;
-  search?: string;
+  searchTerm?: string;
   paymentStatus?: string;
   deliveryStatus?: string;
 };
@@ -156,7 +156,7 @@ export const getAllOrders = async ({
   user,
   page,
   limit,
-  search,
+  searchTerm,
   paymentStatus,
   deliveryStatus,
 }: GetAllOrdersOptions) => {
@@ -167,16 +167,16 @@ export const getAllOrders = async ({
     ...(user.role === "USER" && { deletedAt: null }),
     ...(paymentStatus && { paymentStatus: paymentStatus as PAYMENTSTATUS }),
     ...(deliveryStatus && { deliveryStatus: deliveryStatus as ORDERSTATUS }),
-    ...(search && {
+    ...(searchTerm && {
       OR: [
-        { userFirstName: { contains: search, mode: "insensitive" } },
-        { userLastName: { contains: search, mode: "insensitive" } },
-        { userEmail: { contains: search, mode: "insensitive" } },
-        { userPhone: { contains: search, mode: "insensitive" } },
-        { userWhatsappPhone: { contains: search, mode: "insensitive" } },
-        { userAddress: { contains: search, mode: "insensitive" } },
-        { userCity: { contains: search, mode: "insensitive" } },
-        { userState: { contains: search, mode: "insensitive" } },
+        { userFirstName: { contains: searchTerm, mode: "insensitive" } },
+        { userLastName: { contains: searchTerm, mode: "insensitive" } },
+        { userEmail: { contains: searchTerm, mode: "insensitive" } },
+        { userPhone: { contains: searchTerm, mode: "insensitive" } },
+        { userWhatsappPhone: { contains: searchTerm, mode: "insensitive" } },
+        { userAddress: { contains: searchTerm, mode: "insensitive" } },
+        { userCity: { contains: searchTerm, mode: "insensitive" } },
+        { userState: { contains: searchTerm, mode: "insensitive" } },
       ],
     }),
   };

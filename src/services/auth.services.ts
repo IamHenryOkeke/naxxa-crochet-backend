@@ -6,13 +6,14 @@ import { createResetToken, hashResetToken } from "../utils/crypto";
 import { comparePassword, hashPassword } from "../utils/hash";
 import { signJWT, verifyJWT } from "../utils/jwt";
 
-export const signUp = async (
-  username: string,
-  email: string,
-  password: string,
-) => {
-  const normalizedEmail = email.toLowerCase();
-  const normalizedUsername = username.toLowerCase();
+export const signUp = async (data: {
+  username: string;
+  email: string;
+  password: string;
+  name: string;
+}) => {
+  const normalizedEmail = data.email.toLowerCase();
+  const normalizedUsername = data.username.toLowerCase();
 
   const existingUserByEmail = await userQueries.getUserByEmail(normalizedEmail);
   const existingUserByUsername =
@@ -29,12 +30,13 @@ export const signUp = async (
     );
   }
 
-  const hashedPassword = await hashPassword(password);
+  const hashedPassword = await hashPassword(data.password);
 
   const values = {
     username: normalizedUsername,
     email: normalizedEmail,
     password: hashedPassword,
+    name: data.name.trim(),
   };
 
   const newUser = await userQueries.createUser(values);
@@ -52,7 +54,7 @@ export const signUp = async (
 
   await sendMail(
     "Verify Your Email",
-    newUser.username || newUser.email,
+    (newUser.name || newUser.username) as string,
     newUser.email,
     `Click the link to verify your account: ${verificationLink}. This link expires in 15 minutes`,
   );

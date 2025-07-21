@@ -3,10 +3,10 @@ import { Prisma } from "../generated/prisma";
 import prisma from "../lib/prisma";
 
 export async function createPasswordResetToken(
-  values: Prisma.PasswordResetTokenCreateInput,
+  values: Prisma.TokenCreateInput,
 ) {
   try {
-    const data = await prisma.passwordResetToken.create({
+    const data = await prisma.token.create({
       data: values,
     });
     return data;
@@ -22,7 +22,7 @@ export async function createPasswordResetToken(
 
 export async function getPasswordResetTokenByHashedToken(tokenHash: string) {
   try {
-    const data = await prisma.passwordResetToken.findFirst({
+    const data = await prisma.token.findFirst({
       where: {
         tokenHash,
         expiresAt: {
@@ -43,7 +43,7 @@ export async function getPasswordResetTokenByHashedToken(tokenHash: string) {
 
 export async function deletePasswordResetToken(userId: string) {
   try {
-    const data = await prisma.passwordResetToken.deleteMany({
+    const data = await prisma.token.deleteMany({
       where: {
         userId,
       },
